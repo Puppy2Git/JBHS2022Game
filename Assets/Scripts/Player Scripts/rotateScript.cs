@@ -52,7 +52,7 @@ public class rotateScript : MonoBehaviour
         BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation);
         //Sets it's direction and speed
         bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
-        //Tells it is is a lie
+        //Tells it is is a lie  
         bulletClone.dupe = true;
     }
 }

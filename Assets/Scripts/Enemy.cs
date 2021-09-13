@@ -9,14 +9,19 @@ public class Enemy : MonoBehaviour
     private Transform Player;
     private Rigidbody2D StreetThug;
     private Vector2 movement;
-    
+    public BulletScript bullet;
+    public Transform Crosshair;
+
 
     // Var
     public float shotRate = 2.0f;
     private float shotTimer = 0.0f;
     private int enemy_health = 100;
     private float movement_speed = 3f;
-    
+    public float bulletSpeed = 25;
+    public float offset = 5f;
+    public bool do_shoot;
+    public float rotationOffset = 90f;
 
     void Start()
     {
@@ -30,6 +35,8 @@ public class Enemy : MonoBehaviour
         Enemy_Movement();
         Enemy_Death(enemy_health);
         Go_to_character(movement);
+        Fire_rate();
+        Debug.Log(gameObject.transform.rotation);
     }
 
     
@@ -61,11 +68,11 @@ public class Enemy : MonoBehaviour
     // Enemy Fire rate
     private void Fire_rate()
     {
-        if (player.GetComponent<Health>().health >= 0)
-        {
-            if (shotTimer <= 0f)
-            {
-                shoot();
+       if (player.GetComponent<Health>().health >= 0)
+       {
+           if (shotTimer <= 0f)
+           {
+                Enemy_shoot();
                 shotTimer = shotRate;
             }
             shotTimer -= Time.deltaTime;
@@ -83,6 +90,7 @@ public class Enemy : MonoBehaviour
         StreetThug.rotation = angle;
         direction.Normalize();
         movement = direction;
+        
 
     }
     private void Go_to_character(Vector2 direction)
@@ -91,8 +99,15 @@ public class Enemy : MonoBehaviour
         StreetThug.MovePosition((Vector2)transform.position + (direction * movement_speed * Time.deltaTime));
     }
     // Making the enemy shoot
-    private void shoot()
+    private void Enemy_shoot()
     {
+        //Generates a new bullet
+        BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation.);
+        //Sets it's direction and speed
+        bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
+        //Tells it is is a lie
+        bulletClone.dupe = true;
+        
 
     }
 
