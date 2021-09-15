@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
 
     // Var
     public float shotRate = 2.0f;
+    private float stimRate = 30.0f;
+    private float stimTimer = 0.0f;
     private float shotTimer = 0.0f;
     private int enemy_health = 100;
     private float movement_speed = 3f;
@@ -35,17 +37,17 @@ public class Enemy : MonoBehaviour
         Enemy_Movement();
         Enemy_Death(enemy_health);
         Go_to_character(movement);
-        Fire_rate();
-        Debug.Log(gameObject.transform.rotation);
+        //Fire_rate();
+        Stim();
     }
 
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        switch(collision.gameObject.tag)
+        switch (collision.gameObject.tag)
         {
             // Collision with Player
-            case("Player"):
+            case ("Player"):
                 collision.gameObject.GetComponent<Health>().health -= 15;
                 Debug.Log(collision.gameObject.GetComponent<Health>().health);
                 break;
@@ -62,9 +64,29 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
+            Debug.Log("Enemy Died");
         }
     }
-   
+    public void Stim_Timer()
+    {
+      //When timer == 30
+       if(player.GetComponent<Health>().health >= 0)
+        {
+            if (stimTimer >= stimRate)
+            {
+                Stim();
+
+            }
+            stimTimer = 0;
+        }
+
+    }
+    public void Stim()
+    {
+        movement_speed = 5f;
+       
+
+    }
     // Enemy Fire rate
     private void Fire_rate()
     {
@@ -72,7 +94,7 @@ public class Enemy : MonoBehaviour
        {
            if (shotTimer <= 0f)
            {
-                Enemy_shoot();
+                //Enemy_shoot();
                 shotTimer = shotRate;
             }
             shotTimer -= Time.deltaTime;
@@ -95,20 +117,22 @@ public class Enemy : MonoBehaviour
     }
     private void Go_to_character(Vector2 direction)
     {
-        
         StreetThug.MovePosition((Vector2)transform.position + (direction * movement_speed * Time.deltaTime));
     }
     // Making the enemy shoot
-    private void Enemy_shoot()
-    {
-        //Generates a new bullet
-        BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation.);
-        //Sets it's direction and speed
-        bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
-        //Tells it is is a lie
-        bulletClone.dupe = true;
-        
+    //private void Enemy_shoot()
+   // {
+        //determine rotation based off of position
+        //Vector2 direction = new Vector2(Player.position.x - transform.position.x, Player.position.y - transform.position.y);
+        //transform.position = StreetThug.transform.position + new Vector3(0,0, offset);
+        //Crosshair.transform.up = direction;
 
-    }
+        //Generates a new bullet
+        //BulletScript bulletClone = (BulletScript)Instantiate(bullet, transform.position, transform.rotation);
+        //Sets it's direction and speed
+        //bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
+        //Tells it is is a lie
+        //bulletClone.dupe = true;
+   // }
 
 }
