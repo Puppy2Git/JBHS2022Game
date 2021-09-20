@@ -15,8 +15,6 @@ public class Enemy : MonoBehaviour
 
     // Var
     public float shotRate = 2.0f;
-    private float stimRate = 30.0f;
-    private float stimTimer = 0.0f;
     private float shotTimer = 0.0f;
     private int enemy_health = 100;
     private float movement_speed = 3f;
@@ -24,7 +22,9 @@ public class Enemy : MonoBehaviour
     public float offset = 5f;
     public bool do_shoot;
     public float rotationOffset = 90f;
-
+    private float time = 5f;
+    private float time_one = 30f;
+    private bool stim_state;
     void Start()
     {
         StreetThug = gameObject.GetComponent<Rigidbody2D>();
@@ -38,7 +38,8 @@ public class Enemy : MonoBehaviour
         Enemy_Death(enemy_health);
         Go_to_character(movement);
         //Fire_rate();
-        Stim();
+        Stim_Timer();
+        
     }
 
 
@@ -69,22 +70,28 @@ public class Enemy : MonoBehaviour
     }
     public void Stim_Timer()
     {
-      //When timer == 30
-       if(player.GetComponent<Health>().health >= 0)
+
+        //When timer == 30
+        if (player.GetComponent<Health>().health >= 0)
         {
-            if (stimTimer >= stimRate)
+            if (time_one <= 0)
             {
-                Stim();
-
+                movement_speed = 10;
+                time_one = 30f;
+                stim_state = true;
+        
             }
-            stimTimer = 0;
+            time_one -= Time.deltaTime;
+            if(stim_state == true)
+            {
+                if(time <= 0) {
+                    movement_speed = 3;
+                    stim_state = false;
+                    time = 5f;
+                }
+                time -= Time.deltaTime;
+            }
         }
-
-    }
-    public void Stim()
-    {
-        movement_speed = 5f;
-       
 
     }
     // Enemy Fire rate

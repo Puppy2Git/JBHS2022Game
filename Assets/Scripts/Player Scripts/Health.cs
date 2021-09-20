@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
     }
     public void into_void(float height)
     {
-        if(height <= -15    )
+        if(height <= -15)
         {
             restart();
         }
