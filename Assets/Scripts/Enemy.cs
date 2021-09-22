@@ -14,10 +14,11 @@ public class Enemy : MonoBehaviour
 
 
     // Var
+    public int damage = 15;
     public float shotRate = 2.0f;
     private float shotTimer = 0.0f;
     private int enemy_health = 100;
-    private float movement_speed = 3f;
+    private float movement_speed = 5f;
     public float bulletSpeed = 25;
     public float offset = 5f;
     public bool do_shoot;
@@ -25,10 +26,14 @@ public class Enemy : MonoBehaviour
     private float time = 5f;
     private float time_one = 30f;
     private bool stim_state;
+    private float randomNumber;
+    private bool isRanged;
+
     void Start()
     {
         StreetThug = gameObject.GetComponent<Rigidbody2D>();
         Player = player.GetComponent<Transform>();
+        attack_type();
     }
 
 
@@ -42,20 +47,38 @@ public class Enemy : MonoBehaviour
         
     }
 
+    private void attack_type()
+    {
+        randomNumber = Random.Range(0, 2);
+        if (randomNumber == 1)
+        {
+            isRanged = true;
+            enemy_type(isRanged);
+        }
+        else
+        {
+            isRanged = false;
+            enemy_type(isRanged);
+        }
 
+    
+    }
+    private void enemy_type(bool attack_type)
+    {
+
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.gameObject.tag)
         {
             // Collision with Player
             case ("Player"):
-                collision.gameObject.GetComponent<Health>().health -= 15;
+                collision.gameObject.GetComponent<Health>().health -= damage;
                 Debug.Log(collision.gameObject.GetComponent<Health>().health);
                 break;
             // Collision with Bullet
             case ("Bullet"):
                 enemy_health -= 100;
-                Debug.Log("Enemy died");
                 break;
         }
     }
@@ -65,17 +88,15 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
-            Debug.Log("Enemy Died");
         }
     }
     public void Stim_Timer()
     {
-
-        //When timer == 30
         if (player.GetComponent<Health>().health >= 0)
         {
             if (time_one <= 0)
             {
+                damage = 20;
                 movement_speed = 10;
                 time_one = 30f;
                 stim_state = true;
@@ -85,6 +106,7 @@ public class Enemy : MonoBehaviour
             if(stim_state == true)
             {
                 if(time <= 0) {
+                    damage = 15;
                     movement_speed = 3;
                     stim_state = false;
                     time = 5f;
@@ -105,8 +127,6 @@ public class Enemy : MonoBehaviour
                 shotTimer = shotRate;
             }
             shotTimer -= Time.deltaTime;
-
-
         }
     }
 
@@ -116,11 +136,21 @@ public class Enemy : MonoBehaviour
     {
         Vector3 direction = Player.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        StreetThug.rotation = angle;
-        direction.Normalize();
-        movement = direction;
-        
+        if (direction.x >= transform.position.x)
+        {
+            StreetThug.GetComponent<SpriteRenderer>().flipY = true;
+            direction.Normalize();
+            movement = direction;
+            Go_to_character(movement);
+        }
+        else if (direction.x <= transform.position.x)
+        {
+            StreetThug.GetComponent<SpriteRenderer>().flipY = false;
+            direction.Normalize();
+            movement = direction;
+            Go_to_character(movement);
 
+        } 
     }
     private void Go_to_character(Vector2 direction)
     {
