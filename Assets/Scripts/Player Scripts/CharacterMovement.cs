@@ -15,7 +15,7 @@ public class CharacterMovement : MonoBehaviour
     public float dashDuration;//The length of the dash
     private float dashCooldown;//Internal dash cooldown timer
     private bool canMove;//Whether the player can move
-    private bool canDash;//If the player can dash
+    public bool canDash;//If the player can dash
     private bool isDashing;//Internal is the player dashing
     private float dashDir;//The direction the dash is heading
     private float gravity;//gravity nooooo

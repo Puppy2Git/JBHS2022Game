@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     private int enemy_health = 100;
     private float movement_speed = 5f;
     public float bulletSpeed = 25;
-    public float offset = 5f;
+    public float offset;
     public bool do_shoot;
     public float rotationOffset = 90f;
     private float time = 5f;
@@ -42,9 +42,8 @@ public class Enemy : MonoBehaviour
         Enemy_Movement();
         Enemy_Death(enemy_health);
         Go_to_character(movement);
-        //Fire_rate();
         Stim_Timer();
-        
+
     }
 
     private void attack_type()
@@ -61,7 +60,7 @@ public class Enemy : MonoBehaviour
             enemy_type(isRanged);
         }
 
-    
+
     }
     private void enemy_type(bool attack_type)
     {
@@ -100,12 +99,13 @@ public class Enemy : MonoBehaviour
                 movement_speed = 10;
                 time_one = 30f;
                 stim_state = true;
-        
+
             }
             time_one -= Time.deltaTime;
-            if(stim_state == true)
+            if (stim_state == true)
             {
-                if(time <= 0) {
+                if (time <= 0)
+                {
                     damage = 15;
                     movement_speed = 3;
                     stim_state = false;
@@ -119,11 +119,11 @@ public class Enemy : MonoBehaviour
     // Enemy Fire rate
     private void Fire_rate()
     {
-       if (player.GetComponent<Health>().health >= 0)
-       {
-           if (shotTimer <= 0f)
-           {
-                //Enemy_shoot();
+        if (player.GetComponent<Health>().health >= 0)
+        {
+            if (shotTimer <= 0f)
+            {
+                Enemy_shoot();
                 shotTimer = shotRate;
             }
             shotTimer -= Time.deltaTime;
@@ -150,26 +150,17 @@ public class Enemy : MonoBehaviour
             movement = direction;
             Go_to_character(movement);
 
-        } 
+        }
     }
     private void Go_to_character(Vector2 direction)
     {
         StreetThug.MovePosition((Vector2)transform.position + (direction * movement_speed * Time.deltaTime));
     }
     // Making the enemy shoot
-    //private void Enemy_shoot()
-   // {
-        //determine rotation based off of position
-        //Vector2 direction = new Vector2(Player.position.x - transform.position.x, Player.position.y - transform.position.y);
-        //transform.position = StreetThug.transform.position + new Vector3(0,0, offset);
-        //Crosshair.transform.up = direction;
+    private void Enemy_shoot()
+    {
+       
+        
 
-        //Generates a new bullet
-        //BulletScript bulletClone = (BulletScript)Instantiate(bullet, transform.position, transform.rotation);
-        //Sets it's direction and speed
-        //bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
-        //Tells it is is a lie
-        //bulletClone.dupe = true;
-   // }
-
+    }
 }

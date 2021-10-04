@@ -49,7 +49,7 @@ public class Health : MonoBehaviour
     }
     public void restart()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Level   1");
         setMaxHealth(100);
     }
 }
